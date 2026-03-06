@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Incentivos Comercial - Vibras Positivas</title>
+    <title>Panel de Incentivos - Plantilla Genérica</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -13,13 +13,13 @@
     <header class="bg-white shadow-sm border-b p-4 mb-6">
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-3">
-                <span id="label-empresa" class="text-2xl font-black text-blue-900 tracking-tighter uppercase"></span>
+                <span id="label-empresa" class="text-2xl font-black text-blue-900 tracking-tighter uppercase">NOMBRE EMPRESA</span>
                 <span class="text-gray-300 text-xl">|</span>
-                <span id="label-proveedor" class="text-xl font-bold text-blue-600 italic"></span>
+                <span id="label-proveedor" class="text-xl font-bold text-blue-600 italic">PROVEEDOR</span>
             </div>
             <div class="text-right">
                 <p id="fecha-actual" class="text-xs text-gray-500 font-medium"></p>
-                <p id="label-sede" class="text-sm font-bold text-blue-800"></p>
+                <p id="label-sede" class="text-sm font-bold text-blue-800">SEDE / CIUDAD</p>
             </div>
         </div>
     </header>
@@ -28,10 +28,10 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
             <div class="lg:col-span-2 bg-slate-800 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden">
                 <div class="relative z-10">
-                    <h2 class="text-sm uppercase tracking-widest opacity-80 font-bold">Cumplimiento Global Compañía</h2>
+                    <h2 class="text-sm uppercase tracking-widest opacity-80 font-bold">Cumplimiento Global</h2>
                     <div class="flex items-baseline space-x-2 mt-2">
                         <span id="total-vendido-global" class="text-6xl font-black">0</span>
-                        <span id="label-meta-total" class="text-xl opacity-60"></span>
+                        <span id="label-meta-total" class="text-xl opacity-60">/ 0 Cajas</span>
                     </div>
                     <div class="w-full bg-slate-700 rounded-full h-4 mt-4 overflow-hidden border border-slate-600">
                         <div id="barra-global" class="h-full bg-green-400 transition-all duration-500" style="width: 0%"></div>
@@ -43,15 +43,15 @@
                 <h3 class="text-gray-500 text-xs font-bold uppercase mb-4 text-center border-b pb-2">Incentivos Calculados (COP)</h3>
                 <div class="space-y-3">
                     <div class="flex justify-between items-center">
-                        <span class="text-sm font-medium">Total Fuerza de Ventas:</span>
+                        <span class="text-sm font-medium">Fuerza de Ventas:</span>
                         <span id="total-dinero-vend" class="font-bold text-blue-700">$0</span>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-sm font-medium">Incentivo Líder/Sup:</span>
+                        <span class="text-sm font-medium">Líder / Supervisor:</span>
                         <span id="bono-sup-valor" class="font-bold text-green-600">$0</span>
                     </div>
                     <div class="pt-2 border-t flex justify-between items-center">
-                        <span class="text-base font-black text-slate-800">TOTAL A LIQUIDAR:</span>
+                        <span class="text-base font-black text-slate-800">TOTAL A PAGAR:</span>
                         <span id="total-plan-dinero" class="text-xl font-black text-slate-900">$0</span>
                     </div>
                 </div>
@@ -78,38 +78,30 @@
 
     <script>
         /***********************************************************
-         * SECCIÓN DE CONFIGURACIÓN GENÉRICA
-         * Cambia estos valores para cada nuevo plan de incentivos
+         * SECCIÓN DE CONFIGURACIÓN PARA EL NUEVO USUARIO
+         * Ingrese aquí los datos del nuevo plan de incentivos
          ***********************************************************/
         const CONFIG = {
-            empresa: "DISTRILECO", 
-            proveedor: "LACTALIS",
-            sede: "Sede Caucasia",
-            whatsappContacto: "573117700431",
+            empresa: "NOMBRE EMPRESA", 
+            proveedor: "NOMBRE PROVEEDOR",
+            sede: "CIUDAD / SEDE",
+            whatsappContacto: "570000000000", // Código de país + número
             
-            metaGlobalCajas: 700,
-            umbralPorcentaje: 0.85, // 0.85 equivale al 85%
-            pagoCajaVendedor: 3000,
-            pagoCajaSupervisor: 1000,
+            metaGlobalCajas: 0,
+            umbralCumplimiento: 0.85, // 0.85 representa el 85%
+            pagoPorCajaVendedor: 0,
+            pagoPorCajaSupervisor: 0,
 
-            // Agrega o quita vendedores según el plan actual
+            // Ejemplo de estructura: { nombre: "Juan", presupuesto: 100 }
             vendedores: [
-                { nombre: "Danny", presupuesto: 194 },
-                { nombre: "Alexander", presupuesto: 155 },
-                { nombre: "Juan Quintana", presupuesto: 179 },
-                { nombre: "Lorenzo", presupuesto: 80 },
-                { nombre: "Roy", presupuesto: 45 },
-                { nombre: "Argenis", presupuesto: 25 },
-                { nombre: "Ruben Avendaño", presupuesto: 12 },
-                { nombre: "Juan Zabala", presupuesto: 10 },
-                { nombre: "Oficina", presupuesto: 3 }
+                { nombre: "VENDEDOR 1", presupuesto: 0 }
             ]
         };
 
         /***********************************************************
-         * LÓGICA CORE
+         * LÓGICA DEL SISTEMA (NO MODIFICAR)
          ***********************************************************/
-        let ventas = JSON.parse(localStorage.getItem('v_gest_comercial_gen')) || {};
+        let ventas = JSON.parse(localStorage.getItem('v_plan_generico')) || {};
 
         function init() {
             document.getElementById('label-empresa').innerText = CONFIG.empresa;
@@ -130,9 +122,12 @@
             CONFIG.vendedores.forEach(v => {
                 const actual = ventas[v.nombre] || 0;
                 totalG += actual;
-                const pct = ((actual / v.presupuesto) * 100).toFixed(1);
-                const cumple = actual >= (v.presupuesto * CONFIG.umbralPorcentaje);
-                const dineroV = cumple ? (actual * CONFIG.pagoCajaVendedor) : 0;
+                
+                // Evitar división por cero
+                const pct = v.presupuesto > 0 ? ((actual / v.presupuesto) * 100).toFixed(1) : "0.0";
+                const cumple = v.presupuesto > 0 && actual >= (v.presupuesto * CONFIG.umbralCumplimiento);
+                
+                const dineroV = cumple ? (actual * CONFIG.pagoPorCajaVendedor) : 0;
                 totalPlataVendedores += dineroV;
 
                 container.innerHTML += `
@@ -140,12 +135,12 @@
                         <div class="flex justify-between items-start mb-2">
                             <span class="font-bold text-gray-700 text-xs uppercase">${v.nombre}</span>
                             <span class="text-[9px] font-bold px-2 py-0.5 rounded-full ${cumple ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400'}">
-                                ${cumple ? 'ALCANZADO' : 'EN PROCESO'}
+                                ${cumple ? 'CUMPLIDO' : 'EN PROCESO'}
                             </span>
                         </div>
                         <div class="flex items-center justify-between mb-2">
                             <input type="number" value="${actual}" onchange="save('${v.nombre}', this.value)" 
-                                class="w-16 text-lg font-bold text-blue-600 bg-blue-50 rounded-lg p-1 text-center outline-none">
+                                class="w-16 text-lg font-bold text-blue-600 bg-blue-50 rounded-lg p-1 text-center outline-none border-none">
                             <div class="text-right leading-none">
                                 <p class="text-[9px] text-gray-400 font-bold uppercase">Meta: ${v.presupuesto}</p>
                                 <p class="text-xs font-black text-slate-900">${pct}%</p>
@@ -158,10 +153,12 @@
                     </div>`;
             });
 
-            const bonoSup = totalG >= (CONFIG.metaGlobalCajas * CONFIG.umbralPorcentaje) ? (totalG * CONFIG.pagoCajaSupervisor) : 0;
+            const bonoSup = (CONFIG.metaGlobalCajas > 0 && totalG >= (CONFIG.metaGlobalCajas * CONFIG.umbralCumplimiento)) 
+                ? (totalG * CONFIG.pagoPorCajaSupervisor) 
+                : 0;
 
             document.getElementById('total-vendido-global').innerText = totalG;
-            document.getElementById('barra-global').style.width = `${Math.min((totalG/CONFIG.metaGlobalCajas)*100, 100)}%`;
+            document.getElementById('barra-global').style.width = CONFIG.metaGlobalCajas > 0 ? `${Math.min((totalG/CONFIG.metaGlobalCajas)*100, 100)}%` : "0%";
             document.getElementById('total-dinero-vend').innerText = `$${totalPlataVendedores.toLocaleString('es-CO')}`;
             document.getElementById('bono-sup-valor').innerText = `$${bonoSup.toLocaleString('es-CO')}`;
             document.getElementById('total-plan-dinero').innerText = `$${(totalPlataVendedores + bonoSup).toLocaleString('es-CO')}`;
@@ -169,7 +166,7 @@
 
         function save(n, v) {
             ventas[n] = parseInt(v) || 0;
-            localStorage.setItem('v_gest_comercial_gen', JSON.stringify(ventas));
+            localStorage.setItem('v_plan_generico', JSON.stringify(ventas));
             render();
         }
 
@@ -183,24 +180,23 @@
             let msg = `*REPORTE COMERCIAL: ${CONFIG.empresa} - ${CONFIG.proveedor}*\n`;
             msg += `🕒 ${new Date().toLocaleString('es-CO')}\n`;
             msg += `--------------------------------\n`;
-            msg += `*VENDEDOR | PTA VS REAL | %*\n`;
             
             CONFIG.vendedores.forEach(v => {
                 const act = ventas[v.nombre] || 0;
                 t += act;
-                const pct = ((act/v.presupuesto)*100).toFixed(1);
-                const cumple = act >= (v.presupuesto * CONFIG.umbralPorcentaje);
-                plataVend += cumple ? (act * CONFIG.pagoCajaVendedor) : 0;
+                const pct = v.presupuesto > 0 ? ((act/v.presupuesto)*100).toFixed(1) : "0.0";
+                const cumple = v.presupuesto > 0 && act >= (v.presupuesto * CONFIG.umbralCumplimiento);
+                plataVend += cumple ? (act * CONFIG.pagoPorCajaVendedor) : 0;
                 msg += `${cumple ? '✅':'⏳'} *${v.nombre}*: ${v.presupuesto} vs ${act} (${pct}%)\n`;
             });
 
-            const bonoSup = t >= (CONFIG.metaGlobalCajas * CONFIG.umbralPorcentaje) ? (t * CONFIG.pagoCajaSupervisor) : 0;
+            const bonoSup = (CONFIG.metaGlobalCajas > 0 && t >= (CONFIG.metaGlobalCajas * CONFIG.umbralCumplimiento)) ? (t * CONFIG.pagoPorCajaSupervisor) : 0;
             msg += `--------------------------------\n`;
-            msg += `📦 *TOTAL CAJAS:* ${t} / ${CONFIG.metaGlobalCajas}\n`;
+            msg += `📦 *TOTAL ACUMULADO:* ${t} / ${CONFIG.metaGlobalCajas}\n`;
             msg += `💰 *DINERO VENDEDORES:* $${plataVend.toLocaleString('es-CO')}\n`;
-            msg += `👤 *INC. LIDERAZGO:* $${bonoSup.toLocaleString('es-CO')}\n`;
-            msg += `🚀 *TOTAL PLAN:* $${(plataVend + bonoSup).toLocaleString('es-CO')}\n\n`;
-            msg += `_App desarrollada por Vibras Positivas (3117700431)_`;
+            msg += `👤 *INCENTIVO LÍDER:* $${bonoSup.toLocaleString('es-CO')}\n`;
+            msg += `🚀 *GRAN TOTAL:* $${(plataVend + bonoSup).toLocaleString('es-CO')}\n\n`;
+            msg += `_Software desarrollado por Vibras Positivas (3117700431)_`;
 
             window.open(`https://wa.me/${CONFIG.whatsappContacto}?text=${encodeURIComponent(msg)}`, '_blank');
         }
@@ -211,9 +207,9 @@
                 return {
                     VENDEDOR: v.nombre,
                     PRESUPUESTO: v.presupuesto,
-                    EJECUTADO: act,
-                    CUMPLIMIENTO: ((act/v.presupuesto)*100).toFixed(1) + '%',
-                    INCENTIVO_COP: act >= (v.presupuesto * CONFIG.umbralPorcentaje) ? (act * CONFIG.pagoCajaVendedor) : 0
+                    REAL: act,
+                    CUMPLIMIENTO: v.presupuesto > 0 ? ((act/v.presupuesto)*100).toFixed(1) + '%' : "0%",
+                    INCENTIVO_COP: (v.presupuesto > 0 && act >= (v.presupuesto * CONFIG.umbralCumplimiento)) ? (act * CONFIG.pagoPorCajaVendedor) : 0
                 }
             });
             const ws = XLSX.utils.json_to_sheet(data);
